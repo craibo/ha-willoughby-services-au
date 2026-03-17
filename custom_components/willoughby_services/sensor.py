@@ -5,13 +5,23 @@ from datetime import datetime
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.helpers.entity import DeviceInfo, CoordinatorEntity
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from homeassistant.util import dt as dt_util
 
 from .const import DOMAIN, SENSOR_KEYS
+
+
+SENSOR_ICONS: dict[str, str] = {
+    "next_red_bin_collection": "mdi:trash-can",
+    "next_yellow_bin_collection": "mdi:trash-can",
+    "next_green_bin_collection": "mdi:trash-can",
+    "next_street_sweep_date": "mdi:broom",
+    "next_autumn_bulky_collection": "mdi:dump-truck",
+    "next_winter_bulky_collection": "mdi:dump-truck",
+    "next_summer_bulky_collection": "mdi:dump-truck",
+}
 
 
 async def async_setup_entry(
@@ -45,6 +55,12 @@ class WilloughbyWasteSensor(CoordinatorEntity, SensorEntity):
         self._sensor_key = sensor_key
         self._attr_unique_id = f"{entry_id}_{sensor_key}"
         self._attr_name = f"{name} {self._friendly_name_suffix(sensor_key)}"
+        if sensor_key in SENSOR_ICONS:
+            self._attr_icon = SENSOR_ICONS[sensor_key]
+
+    @property
+    def icon(self) -> str | None:
+        return getattr(self, "_attr_icon", None)
 
     @property
     def device_info(self) -> DeviceInfo:
