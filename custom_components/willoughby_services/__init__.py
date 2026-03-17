@@ -19,7 +19,7 @@ from .waste_client import WilloughbyWasteClient, WilloughbyWasteError
 _LOGGER = logging.getLogger(__name__)
 
 
-type WilloughbyConfigEntry = ConfigEntry
+WilloughbyConfigEntry = ConfigEntry
 
 
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:

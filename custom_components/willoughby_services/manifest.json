@@ -2,9 +2,9 @@
   "domain": "willoughby_services",
   "name": "Willoughby Waste and Street Sweeping Services",
   "version": "0.1.0",
-  "documentation": "https://github.com/your-org/ha-willoughby-services-au",
+  "documentation": "https://github.com/craibo/ha-willoughby-services-au",
   "codeowners": [
-    "@your-github-username"
+    "@craibo"
   ],
   "dependencies": [],
   "requirements": [],
