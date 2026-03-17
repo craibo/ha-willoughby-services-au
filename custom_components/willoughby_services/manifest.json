@@ -1,14 +1,15 @@
 {
   "domain": "willoughby_services",
   "name": "Willoughby Waste and Street Sweeping Services",
-  "version": "0.2.0",
-  "documentation": "https://github.com/craibo/ha-willoughby-services-au",
   "codeowners": [
     "@craibo"
   ],
-  "dependencies": [],
-  "requirements": [],
   "config_flow": true,
-  "iot_class": "cloud_polling"
+  "dependencies": [],
+  "documentation": "https://github.com/craibo/ha-willoughby-services-au",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/craibo/ha-willoughby-services-au/issues",
+  "requirements": [],
+  "version": "0.2.0"
 }
 

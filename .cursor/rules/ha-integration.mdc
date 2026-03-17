@@ -12,7 +12,7 @@ alwaysApply: false
 
 - **Module layout**:
   - Keep the main integration modules under `custom_components/willoughby_services/`:
-    - `__init__.py` for config entries and `DataUpdateCoordinator` setup.
+    - `__init__.py` for config entries, `CONFIG_SCHEMA`, and `DataUpdateCoordinator` setup.
     - `manifest.json` for metadata, `config_flow: true`, and `iot_class: cloud_polling`.
     - `config_flow.py` for interactive setup and options.
     - `sensor.py` for sensor entities.

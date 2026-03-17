@@ -3,10 +3,10 @@
 [![GitHub Release](https://img.shields.io/github/v/release/craibo/ha-willoughby-services-au?style=flat)](https://github.com/craibo/ha-willoughby-services-au/releases)
 [![GitHub Activity](https://img.shields.io/github/commit-activity/m/craibo/ha-willoughby-services-au?style=flat)](https://github.com/craibo/ha-willoughby-services-au/commits/main)
 [![License](https://img.shields.io/github/license/craibo/ha-willoughby-services-au?style=flat)](LICENSE)
-[![hacs](https://img.shields.io/badge/HACS-Custom-orange.svg?style=flat)](https://hacs.xyz/)
+[![hacs_default](https://img.shields.io/badge/HACS-Default%20candidate-blue.svg?style=flat)](https://hacs.xyz/)
 [![Integration](https://img.shields.io/badge/Home%20Assistant-2024.1+-41BDF5.svg?style=flat)](https://www.home-assistant.io/)
 
-A Home Assistant custom integration for [Willoughby City Council](https://www.willoughby.nsw.gov.au/) that provides waste collection and street sweeping date sensors for properties within the council area, NSW Australia.
+A Home Assistant **integration** for [Willoughby City Council](https://www.willoughby.nsw.gov.au/) that provides waste collection and street sweeping date sensors for properties within the council area, NSW Australia. This integration is designed for inclusion in the HACS default repository list and is currently installable as a custom HACS repository.
 
 ---
 
