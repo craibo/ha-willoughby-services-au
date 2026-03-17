@@ -1,10 +1,11 @@
 {
   "name": "Willoughby Waste and Street Sweeping Services",
-  "content_in_root": false,
   "domains": [
     "willoughby_services"
   ],
-  "country": "AU",
+  "country": [
+    "AU"
+  ],
   "homeassistant": "2024.1.0",
   "render_readme": true
 }
