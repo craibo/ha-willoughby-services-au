@@ -5,7 +5,7 @@ from datetime import datetime
 from pathlib import Path
 
 import pytest
-from aiohttp import ClientSession
+from aiohttp import ClientSession, web
 from homeassistant.util import dt as dt_util
 
 from custom_components.willoughby_services.waste_client import (
@@ -14,19 +14,22 @@ from custom_components.willoughby_services.waste_client import (
 
 
 @pytest.mark.asyncio
-async def test_waste_client_parses_all_expected_dates(aiohttp_client, aiohttp_unused_port):
+async def test_waste_client_parses_all_expected_dates(aiohttp_client, unused_tcp_port, monkeypatch):
     fixture_path = Path(__file__).parent / "fixtures_wasteservices_sample.json"
     payload = json.loads(fixture_path.read_text(encoding="utf-8"))
 
     async def handler(request):
-        return aiohttp.web.json_response(payload)
-
-    from aiohttp import web
+        return web.json_response(payload)
 
     app = web.Application()
     app.router.add_get("/ocapi/Public/myarea/wasteservices", handler)
-    port = aiohttp_unused_port()
-    server = await aiohttp_client(app, server_kwargs={"port": port})
+    server = await aiohttp_client(app, server_kwargs={"port": unused_tcp_port})
+
+    import custom_components.willoughby_services.waste_client as wc
+
+    wc.API_BASE_URL = (
+        f"http://127.0.0.1:{unused_tcp_port}/ocapi/Public/myarea/wasteservices"
+    )
 
     session: ClientSession = server.session
 

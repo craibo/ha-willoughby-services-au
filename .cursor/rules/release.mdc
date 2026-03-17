@@ -1,0 +1,22 @@
+---
+description: Release and versioning practices for ha-willoughby-services-au
+globs: "**/*"
+alwaysApply: false
+---
+
+## Release and Versioning
+
+- **Semantic versioning**:
+  - Treat the integration version as a [semantic version](https://semver.org/): `MAJOR.MINOR.PATCH`.
+  - Increment:
+    - `MAJOR` when making incompatible API or behaviour changes.
+    - `MINOR` when adding functionality in a backwards compatible manner.
+    - `PATCH` when making backwards compatible bug fixes or internal-only changes.
+
+- **Version bump on change**:
+  - Every pull request that changes integration behaviour (new features, bug fixes, config flow changes, API usage, or external-facing behaviour) **must** increase the version in `custom_components/willoughby_services/manifest.json`.
+  - Use the smallest semantic version bump that accurately reflects the nature of the change.
+
+- **Single source of truth**:
+  - The version in `manifest.json` is the authoritative integration version and must always match any release tags or changelog entries for the same release.
+
