@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 from aiohttp import ClientSession
+from homeassistant.util import dt as dt_util
 
 from custom_components.willoughby_services.waste_client import (
     WilloughbyWasteClient,
@@ -39,11 +40,13 @@ async def test_waste_client_parses_all_expected_dates(aiohttp_client, aiohttp_un
 
     results = await client.async_get_services()
 
-    assert results["next_red_bin_collection"] == datetime(2026, 3, 23)
-    assert results["next_yellow_bin_collection"] == datetime(2026, 3, 23)
-    assert results["next_green_bin_collection"] == datetime(2026, 3, 23)
-    assert results["next_autumn_bulky_collection"] == datetime(2025, 7, 20)
-    assert results["next_summer_bulky_collection"] == datetime(2025, 11, 9)
-    assert results["next_winter_bulky_collection"] == datetime(2026, 3, 15)
-    assert results["next_street_sweep_date"] == datetime(2026, 3, 17)
+    tz = dt_util.DEFAULT_TIME_ZONE
+
+    assert results["next_red_bin_collection"] == datetime(2026, 3, 23, tzinfo=tz)
+    assert results["next_yellow_bin_collection"] == datetime(2026, 3, 23, tzinfo=tz)
+    assert results["next_green_bin_collection"] == datetime(2026, 3, 23, tzinfo=tz)
+    assert results["next_autumn_bulky_collection"] == datetime(2025, 7, 20, tzinfo=tz)
+    assert results["next_summer_bulky_collection"] == datetime(2025, 11, 9, tzinfo=tz)
+    assert results["next_winter_bulky_collection"] == datetime(2026, 3, 15, tzinfo=tz)
+    assert results["next_street_sweep_date"] == datetime(2026, 3, 17, tzinfo=tz)
 

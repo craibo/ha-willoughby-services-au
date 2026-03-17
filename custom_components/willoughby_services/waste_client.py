@@ -6,6 +6,7 @@ from html.parser import HTMLParser
 from typing import Any
 
 from aiohttp import ClientSession, ClientError
+from homeassistant.util import dt as dt_util
 
 from .const import API_BASE_URL, API_LANG, API_PAGE_LINK, SENSOR_KEYS
 
@@ -129,7 +130,8 @@ class WilloughbyWasteClient:
 
         for fmt in ("%a %d/%m/%Y", "%d/%m/%Y"):
             try:
-                return datetime.strptime(text, fmt)
+                parsed = datetime.strptime(text, fmt)
+                return parsed.replace(tzinfo=dt_util.DEFAULT_TIME_ZONE)
             except ValueError:
                 continue
 
