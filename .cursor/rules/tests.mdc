@@ -1,0 +1,27 @@
+---
+description: Testing patterns for ha-willoughby-services-au
+globs: tests/**/*.py
+alwaysApply: false
+---
+
+## Testing Conventions
+
+- **Frameworks**:
+  - Use `pytest` as the primary test runner.
+  - When adding deeper Home Assistant integration tests, rely on Home Assistant’s official test helpers.
+
+- **Scope and coverage**:
+  - Each non-trivial logic change (parsing, mapping, entity behaviour, config flow) should be covered by at least one automated test.
+  - Prefer small, focussed tests that:
+    - Validate HTML/JSON parsing from the Willoughby wasteservices endpoint.
+    - Confirm correct mapping to the seven logical sensor fields.
+    - Check coordinator behaviour and sensor state updates when wiring in Home Assistant helpers.
+
+- **Fixtures**:
+  - Store static API responses or HTML samples in JSON or text fixtures under `tests/`.
+  - Keep fixtures minimal but realistic, based on responses from the official council endpoint.
+
+- **Style**:
+  - Use clear, descriptive test names that encode the behaviour and expected outcome.
+  - Avoid unnecessary comments; make the test logic and data self-explanatory.
+

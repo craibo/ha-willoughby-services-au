@@ -1,0 +1,25 @@
+---
+description: Index of rules for ha-willoughby-services-au
+alwaysApply: true
+---
+
+## Rule Index for ha-willoughby-services-au
+
+This project provides a Home Assistant custom integration, **Willoughby Waste and Street Sweeping Services**, which exposes collection and street sweeping dates from the official Willoughby City Council website.
+
+### Available Rules
+
+- **core.mdc** – Core project standards (always applied)
+  - High-level expectations for Python style, async usage, error handling, testing, and refactoring.
+  - Applies to all work in this repository.
+
+- **ha-integration.mdc** – Home Assistant integration patterns
+  - Applied when working on files matching `custom_components/willoughby_services/**/*.py`.
+  - Covers integration structure, config flow, coordinator usage, HTTP access to the council wasteservices endpoint, and sensor/entity conventions.
+
+- **tests.mdc** – Testing patterns
+  - Applied when working on files matching `tests/**/*.py`.
+  - Describes expectations for test coverage, fixture usage, and test structure.
+
+Use this index as a starting point when extending or adjusting rules for this project. When adding new rules, keep them focused on a single concern and reference them here for discoverability.
+

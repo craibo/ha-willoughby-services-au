@@ -1,0 +1,67 @@
+---
+description: Home Assistant integration patterns for Willoughby services
+globs: custom_components/willoughby_services/**/*.py
+alwaysApply: false
+---
+
+## Home Assistant Integration Conventions
+
+- **Domain and naming**:
+  - Use the domain `willoughby_services` everywhere (manifest, entity IDs, config entries, logging context).
+  - User-facing integration name: `Willoughby Waste and Street Sweeping Services`.
+
+- **Module layout**:
+  - Keep the main integration modules under `custom_components/willoughby_services/`:
+    - `__init__.py` for config entries and `DataUpdateCoordinator` setup.
+    - `manifest.json` for metadata, `config_flow: true`, and `iot_class: cloud_polling`.
+    - `config_flow.py` for interactive setup and options.
+    - `sensor.py` for sensor entities.
+    - `const.py` and helpers (such as the API client) for shared constants and logic.
+
+## Config Flow and Options
+
+- **User input**:
+  - Accept:
+    - `address` (free-text street address, used mainly for display), and
+    - Optional `geolocationid` (preferred identifier for API calls).
+  - Require that at least one of `address` or `geolocationid` is set.
+- **Uniqueness**:
+  - Use either `geolocationid` or `address` as the basis of the config entry unique ID so users do not create duplicates for the same location.
+- **Options flow**:
+  - Allow later edits of `address` and `geolocationid` while preserving a stable unique ID whenever possible.
+
+## API Access and Polling
+
+- **HTTP client**:
+  - Use `async_get_clientsession(hass)` and `aiohttp` for all outbound HTTP calls.
+  - Target the official Willoughby wasteservices endpoint described on the council site.
+  - Wrap low-level failures in a dedicated error type and surface them through `UpdateFailed` in the coordinator.
+- **Polling**:
+  - Use `DataUpdateCoordinator` with an `update_interval` of one day (daily refresh).
+  - Trigger an initial refresh during `async_setup_entry` so entities have data as soon as possible.
+
+## Entities and Sensors
+
+- **Sensor design**:
+  - Use `CoordinatorEntity` + `SensorEntity` for each logical sensor.
+  - Sensors should include:
+    - Next red bin collection.
+    - Next yellow bin collection.
+    - Next green bin collection.
+    - Next street sweep date.
+    - Next autumn bulk waste collection.
+    - Next winter bulk waste collection.
+    - Next summer bulk waste collection.
+  - Where appropriate, use `device_class: timestamp` for date values.
+
+- **Entity identity**:
+  - Build `unique_id` from the config entry ID plus a stable sensor key.
+  - Use a consistent naming scheme derived from the config entry title and the sensor type.
+  - Group sensors for a location under a single device, with:
+    - Manufacturer: `Willoughby City Council`.
+    - A suitable model string describing the waste services integration.
+
+- **Logging and privacy**:
+  - Avoid logging raw addresses or IDs at info level.
+  - Prefer high-level messages (e.g. “failed to fetch waste services data”) with error details at debug level only when needed.
+

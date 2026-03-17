@@ -1,0 +1,40 @@
+---
+description: Core standards for ha-willoughby-services-au
+alwaysApply: true
+---
+
+## Core Project Standards
+
+- **Project type**: Home Assistant custom integration, installable via HACS, exposing Willoughby City Council waste and street sweeping dates.
+- **Primary domain**: The Home Assistant integration domain must be `willoughby_services`. Do not introduce alternative domains.
+- **Languages and tooling**:
+  - Python for integration code under `custom_components/`.
+  - `pytest` (and Home Assistant test helpers when present) for tests.
+
+## Coding Guidelines
+
+- **Async-first**:
+  - Use async APIs (`async` / `await`) and Home Assistant helpers (`async_get_clientsession`, `DataUpdateCoordinator`).
+  - Avoid blocking I/O in the event loop.
+
+- **Function and method naming**:
+  - Names must be self-documenting and clearly describe behaviour.
+  - Do not add method-level docstrings or inline comments unless the user explicitly requests them.
+
+- **Error handling**:
+  - Convert low-level errors (network, parsing) into clear, higher-level exceptions where helpful.
+  - Avoid leaking user-specific data (such as full street address or geolocation IDs) in logs.
+
+## Testing and Quality
+
+- Every non-trivial change to logic must be accompanied by tests or explicit test updates.
+- Prefer small, focused tests for each behaviour (parsing, mapping, entity setup, coordinator update).
+
+## Refactoring Expectations
+
+- When working in a file and you see:
+  - Duplicated logic,
+  - Overly complex branches,
+  - Outdated patterns that can be simplified,
+  you should point out the opportunity and, when requested, perform a refactor that improves readability without changing observable behaviour.
+
