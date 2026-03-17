@@ -9,6 +9,8 @@ from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
+from homeassistant.util import dt as dt_util
+
 from .const import DOMAIN, SENSOR_KEYS
 
 
@@ -56,7 +58,9 @@ class WilloughbyWasteSensor(CoordinatorEntity, SensorEntity):
     def native_value(self) -> datetime | None:
         value = self.coordinator.data.get(self._sensor_key)
         if isinstance(value, datetime):
-            return value
+            if value.tzinfo is not None:
+                return value
+            return value.replace(tzinfo=dt_util.DEFAULT_TIME_ZONE)
         return None
 
     def _friendly_name_suffix(self, sensor_key: str) -> str:
