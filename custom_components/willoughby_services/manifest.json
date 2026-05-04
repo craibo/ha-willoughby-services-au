@@ -10,6 +10,6 @@
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/craibo/ha-willoughby-services-au/issues",
   "requirements": [],
-  "version": "0.3.0"
+  "version": "0.3.1"
 }
 
