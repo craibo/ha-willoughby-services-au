@@ -1,4 +1,4 @@
-## Willoughby Waste and Street Sweeping Services
+## Willoughby Services NSW
 
 This Home Assistant integration provides date sensors for properties within the Willoughby City Council area (NSW, Australia):
 

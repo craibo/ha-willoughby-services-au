@@ -1,4 +1,4 @@
-# Willoughby Waste and Street Sweeping Services
+# Willoughby Services NSW
 
 [![GitHub Release](https://img.shields.io/github/v/release/craibo/ha-willoughby-services-au?style=flat)](https://github.com/craibo/ha-willoughby-services-au/releases)
 [![GitHub Activity](https://img.shields.io/github/commit-activity/m/craibo/ha-willoughby-services-au?style=flat)](https://github.com/craibo/ha-willoughby-services-au/commits/main)
@@ -31,7 +31,7 @@ A Home Assistant **integration** for [Willoughby City Council](https://www.willo
 
 1. Install [HACS](https://hacs.xyz/) following the instructions [here](https://hacs.xyz/docs/use/)
 2. In HACS, add this repository as a **Custom repository** with category `Integration`
-3. Search for and install **Willoughby Waste and Street Sweeping Services**
+3. Search for and install **Willoughby Services NSW**
 4. Restart Home Assistant
 
 ### Manual Installation
@@ -43,7 +43,7 @@ A Home Assistant **integration** for [Willoughby City Council](https://www.willo
 ### Configuration
 
 1. Go to **Settings** → **Devices & Services**
-2. Click **Add Integration** and search for "Willoughby Waste and Street Sweeping Services"
+2. Click **Add Integration** and search for "Willoughby Services NSW"
 3. Provide one or both of:
    - **Street address**: Your Willoughby Council street address. The integration will call the official Willoughby “My Area” search API to resolve the correct property and geolocation ID.
    - **Geolocation ID**: The Willoughby Council geolocation identifier used by the waste services API (advanced/manual option).
