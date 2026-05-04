@@ -1,6 +1,6 @@
 {
   "domain": "willoughby_services",
-  "name": "Willoughby Waste and Street Sweeping Services",
+  "name": "Willoughby Services NSW",
   "codeowners": [
     "@craibo"
   ],
@@ -10,6 +10,6 @@
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/craibo/ha-willoughby-services-au/issues",
   "requirements": [],
-  "version": "0.2.0"
+  "version": "0.3.0"
 }
 
