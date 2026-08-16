@@ -35,8 +35,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: WilloughbyConfigEntry) -
 
     client = WilloughbyWasteClient(
         session=session,
-        geolocation_id=entry.data.get(CONF_GEOLOCATION_ID),
-        address=entry.data.get(CONF_ADDRESS),
+        geolocation_id=entry.options.get(CONF_GEOLOCATION_ID) or entry.data.get(CONF_GEOLOCATION_ID),
+        address=entry.options.get(CONF_ADDRESS) or entry.data.get(CONF_ADDRESS),
     )
 
     async def async_update() -> dict:
@@ -61,8 +61,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: WilloughbyConfigEntry) -
         "client": client,
     }
 
+    entry.async_on_unload(entry.add_update_listener(_async_update_listener))
+
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
+
+
+async def _async_update_listener(hass: HomeAssistant, entry: WilloughbyConfigEntry) -> None:
+    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: WilloughbyConfigEntry) -> bool:

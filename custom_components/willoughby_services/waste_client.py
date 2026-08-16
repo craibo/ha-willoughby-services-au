@@ -101,7 +101,9 @@ class WilloughbyWasteClient:
             if parsed_date is None:
                 continue
 
-            results[key] = parsed_date
+            existing = results[key]
+            if existing is None or parsed_date < existing:
+                results[key] = parsed_date
 
         return results
 

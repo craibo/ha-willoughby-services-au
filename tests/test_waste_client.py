@@ -53,3 +53,46 @@ async def test_waste_client_parses_all_expected_dates(aiohttp_client, unused_tcp
     assert results["next_winter_bulky_collection"] == datetime(2026, 3, 15, tzinfo=tz)
     assert results["next_street_sweep_date"] == datetime(2026, 3, 17, tzinfo=tz)
 
+
+@pytest.mark.asyncio
+async def test_waste_client_keeps_nearest_bulky_date_when_multiple_windows_share_a_key(
+    aiohttp_client, unused_tcp_port
+):
+    fixture_path = Path(__file__).parent / "fixtures_wasteservices_multi_bulky.json"
+    payload = json.loads(fixture_path.read_text(encoding="utf-8"))
+
+    async def handler(request):
+        return web.json_response(payload)
+
+    app = web.Application()
+    app.router.add_get("/ocapi/Public/myarea/wasteservices", handler)
+    server = await aiohttp_client(app, server_kwargs={"port": unused_tcp_port})
+
+    import custom_components.willoughby_services.waste_client as wc
+
+    wc.API_BASE_URL = (
+        f"http://127.0.0.1:{unused_tcp_port}/ocapi/Public/myarea/wasteservices"
+    )
+
+    session: ClientSession = server.session
+
+    client = WilloughbyWasteClient(
+        session=session,
+        geolocation_id="dummy-id",
+        address=None,
+    )
+    client._session = session  # type: ignore[attr-defined]
+
+    results = await client.async_get_services()
+
+    tz = dt_util.DEFAULT_TIME_ZONE
+
+    # Two "mid-winter to spring" windows (2026 and 2027) map to the same
+    # autumn_bulky key; the earlier one should win, not whichever tile
+    # the HTML parser happened to see last.
+    assert results["next_autumn_bulky_collection"] == datetime(2026, 7, 19, tzinfo=tz)
+    # Two "spring ... to summer" windows (2026->2027 and 2027->2028) map to
+    # the same summer_bulky key; the earlier one should win.
+    assert results["next_summer_bulky_collection"] == datetime(2026, 11, 8, tzinfo=tz)
+    assert results["next_winter_bulky_collection"] == datetime(2027, 3, 14, tzinfo=tz)
+
