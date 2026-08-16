@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
 from aiohttp import ClientError, ClientSession
 
@@ -26,57 +27,39 @@ async def async_search_addresses(
     try:
         async with session.get(SEARCH_API_URL, params=params) as resp:
             resp.raise_for_status()
-            text = await resp.text()
+            data: Any = await resp.json(content_type=None)
     except ClientError as err:
         raise WilloughbyAddressSearchError(
             f"Error searching addresses: {err}"
         ) from err
 
-    return _parse_search_response(text)
+    return _parse_search_response(data)
 
 
-def _parse_search_response(raw_xml: str) -> list[AddressSearchResult]:
+def _parse_search_response(data: Any) -> list[AddressSearchResult]:
+    if not isinstance(data, dict):
+        return []
+
+    items = data.get("Items")
+    if not isinstance(items, list):
+        return []
+
     results: list[AddressSearchResult] = []
 
-    in_result = False
-    current_address: str | None = None
-    current_id: str | None = None
-
-    for line in raw_xml.splitlines():
-        line = line.strip()
-        if not line:
+    for item in items:
+        if not isinstance(item, dict):
             continue
 
-        if "<d2p1:PhysicalAddressSearchResult" in line:
-            in_result = True
-            current_address = None
-            current_id = None
-            continue
+        address = item.get("AddressSingleLine")
+        geolocation_id = item.get("Id")
 
-        if in_result and "</d2p1:PhysicalAddressSearchResult>" in line:
-            if current_address and current_id:
-                results.append(
-                    AddressSearchResult(
-                        address=current_address,
-                        geolocation_id=current_id,
-                    )
+        if address and geolocation_id:
+            results.append(
+                AddressSearchResult(
+                    address=address,
+                    geolocation_id=geolocation_id,
                 )
-            in_result = False
-            current_address = None
-            current_id = None
-            continue
-
-        if in_result and "<d2p1:AddressSingleLine>" in line:
-            start = line.find(">") + 1
-            end = line.rfind("<")
-            current_address = line[start:end].strip()
-            continue
-
-        if in_result and "<d2p1:Id>" in line:
-            start = line.find(">") + 1
-            end = line.rfind("<")
-            current_id = line[start:end].strip()
-            continue
+            )
 
     return results
 
