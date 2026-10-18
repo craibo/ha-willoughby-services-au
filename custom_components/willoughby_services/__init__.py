@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import logging
 from datetime import timedelta
 
@@ -22,6 +23,8 @@ _LOGGER = logging.getLogger(__name__)
 
 WilloughbyConfigEntry = ConfigEntry
 
+
+INITIAL_REFRESH_RETRY_DELAYS = (60, 300, 900)
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
@@ -53,8 +56,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: WilloughbyConfigEntry) -
         update_interval=timedelta(days=1),
     )
 
-    await coordinator.async_config_entry_first_refresh()
-
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = {
         "coordinator": coordinator,
@@ -64,7 +65,27 @@ async def async_setup_entry(hass: HomeAssistant, entry: WilloughbyConfigEntry) -
     entry.async_on_unload(entry.add_update_listener(_async_update_listener))
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+
+    entry.async_create_background_task(
+        hass,
+        _async_initial_refresh(coordinator),
+        name=f"{DOMAIN}_initial_refresh_{entry.entry_id}",
+    )
     return True
+
+
+async def _async_initial_refresh(coordinator: DataUpdateCoordinator) -> None:
+    """Fetch the first data set without blocking Home Assistant startup.
+
+    The coordinator only polls daily, so retry a few times on failure rather
+    than leaving sensors unavailable until the next scheduled refresh.
+    """
+    await coordinator.async_refresh()
+    for delay in INITIAL_REFRESH_RETRY_DELAYS:
+        if coordinator.last_update_success:
+            return
+        await asyncio.sleep(delay)
+        await coordinator.async_refresh()
 
 
 async def _async_update_listener(hass: HomeAssistant, entry: WilloughbyConfigEntry) -> None:

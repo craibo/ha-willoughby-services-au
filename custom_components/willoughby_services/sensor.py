@@ -77,7 +77,7 @@ class WilloughbyWasteSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def native_value(self) -> datetime | None:
-        value = self.coordinator.data.get(self._sensor_key)
+        value = (self.coordinator.data or {}).get(self._sensor_key)
         if isinstance(value, datetime):
             if value.tzinfo is not None:
                 return value
